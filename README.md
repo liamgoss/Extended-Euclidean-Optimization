@@ -9,4 +9,4 @@ This is a group project for ECE 141 - Algorithmic Computations at California Sta
 - Devin Rocha
 
 ## The Extended Euclidean Algorithm
-![Algorithm Flow Chart](https://github.com/liamgoss/Extended-Euclidean-Optimization/blob/main/RecursiveAlgo.png?raw=true)
+![Algorithm Flow Chart](https://github.com/liamgoss/Extended-Euclidean-Optimization/blob/main/supplemental/RecursiveAlgo.png?raw=true)
