@@ -5,23 +5,23 @@
 
 using namespace std;
 
-class GField
+class GFieldElement
 {
     int value;
     int mod;
 
 public:
     //default constructor
-    GField() {
+    GFieldElement() {
     }
 
     //constructor with mod input
-    GField(int m) {
+    GFieldElement(int m) {
         mod = m;
     }
 
     //constructor with data and mod input
-    GField(int data, int m) {
+    GFieldElement(int data, int m) {
         mod = m;
         value = data % m;
     }
@@ -32,21 +32,21 @@ public:
     }
 
     //operator overload for <<
-    friend ostream& operator << (ostream& os, const GField& GF) {
+    friend ostream& operator << (ostream& os, const GFieldElement& GF) {
         os << GF.value;
         return os;
     }
 
     //operator overload for +
-    GField operator + (const GField& GF) {
+    GFieldElement operator + (const GFieldElement& GF) {
         if(this->mod != GF.mod) {
             cout << "Not in the same field\n";
-            GField ret(this->mod);
+            GFieldElement ret(this->mod);
             ret.value = this->value;
             return ret;
         }
         else {
-            GField ret(this->mod);
+            GFieldElement ret(this->mod);
             ret.value = this->value + GF.value;
             ret.value = ret.value % ret.mod;
             return ret;
@@ -54,15 +54,15 @@ public:
     }
 
     //operator overload for -
-    GField operator - (const GField& GF) {
+    GFieldElement operator - (const GFieldElement& GF) {
         if(this->mod != GF.mod) {
             cout << "Not in the same field\n";
-            GField ret(this->mod);
+            GFieldElement ret(this->mod);
             ret.value = this->value;
             return ret;
         }
         else {
-            GField ret(this->mod);
+            GFieldElement ret(this->mod);
             ret.value = this->value - GF.value;
             while(ret.value < 0)
                 ret.value = ret.value + ret.mod;
@@ -72,15 +72,15 @@ public:
     }
 
     //operator overload for *
-    GField operator * (const GField& GF) {
+    GFieldElement operator * (const GFieldElement& GF) {
         if(this->mod != GF.mod) {
             cout << "Not in the same field\n";
-            GField ret(this->mod);
+            GFieldElement ret(this->mod);
             ret.value = this->value;
             return ret;
         }
         else {
-            GField ret(this->mod);
+            GFieldElement ret(this->mod);
             ret.value = this->value * GF.value;
             ret.value = ret.value % ret.mod;
             return ret;
@@ -88,15 +88,15 @@ public:
     }
 
     //operator overload for /
-    GField operator / (const GField& GF) {
+    GFieldElement operator / (const GFieldElement& GF) {
         if(this->mod != GF.mod) {
             cout << "Not in the same field\n";
-            GField ret(this->mod);
+            GFieldElement ret(this->mod);
             ret.value = this->value;
             return ret;
         }
         else {
-            GField ret(this->mod);
+            GFieldElement ret(this->mod);
             ret.value = this->value / GF.value;
             return ret;
         }
