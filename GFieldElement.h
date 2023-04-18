@@ -1,5 +1,5 @@
-#ifndef GFIELD_H_INCLUDED
-#define GFIELD_H_INCLUDED
+#ifndef GFIELDELEMENT_H_INCLUDED
+#define GFIELDELEMENT_H_INCLUDED
 
 #include <iostream>
 
@@ -103,4 +103,4 @@ public:
     }
 };
 
-#endif // GFIELD_H_INCLUDED
+#endif // GFIELDELEMENT_H_INCLUDED
