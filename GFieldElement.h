@@ -119,6 +119,7 @@ public:
         return true;  // element has an inverse
     }
 
+    // Extended Euclidean Algorithm
     GFieldElement inverse() {
         if (this->has_inverse()) {
             int r0 = this->mod;

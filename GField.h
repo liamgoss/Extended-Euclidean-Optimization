@@ -41,9 +41,6 @@ public:
         return elements[index];
     }
 
-    GFieldElement gcd(GFieldElement& x, GFieldElement& y) {
-        
-    }
 
     void createElements() {
         for (int i=0; i<getOrder(); i++) {

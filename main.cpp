@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
         6 | 6  5  4  3  2  1 
     */
     GField myField(7);
-    GFieldElement divis = myField[6] / myField[4];
+    GFieldElement divis = myField[4] / myField[3];
     cout << divis << endl;
 
     return 0;
