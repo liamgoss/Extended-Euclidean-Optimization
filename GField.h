@@ -36,6 +36,15 @@ public:
         return elements;
     }
 
+    // Overload the [] operator so that you can do GField[x] to get the xth element object
+    GFieldElement& operator[] (int index) {
+        return elements[index];
+    }
+
+    GFieldElement gcd(GFieldElement& x, GFieldElement& y) {
+        
+    }
+
     void createElements() {
         for (int i=0; i<getOrder(); i++) {
             GFieldElement x(i, this->order);

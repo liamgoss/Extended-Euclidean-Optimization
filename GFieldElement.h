@@ -2,6 +2,7 @@
 #define GFIELDELEMENT_H_INCLUDED
 
 #include <iostream>
+#include <stdexcept>
 
 using namespace std;
 
@@ -40,7 +41,8 @@ public:
     //operator overload for +
     GFieldElement operator + (const GFieldElement& GF) {
         if(this->mod != GF.mod) {
-            cout << "Not in the same field\n";
+            throw invalid_argument("Not in the same field!" );
+            
             GFieldElement ret(this->mod);
             ret.value = this->value;
             return ret;
@@ -56,7 +58,8 @@ public:
     //operator overload for -
     GFieldElement operator - (const GFieldElement& GF) {
         if(this->mod != GF.mod) {
-            cout << "Not in the same field\n";
+            throw invalid_argument("Not in the same field!" );
+            
             GFieldElement ret(this->mod);
             ret.value = this->value;
             return ret;
@@ -74,7 +77,7 @@ public:
     //operator overload for *
     GFieldElement operator * (const GFieldElement& GF) {
         if(this->mod != GF.mod) {
-            cout << "Not in the same field\n";
+            throw invalid_argument("Not in the same field!" );
             GFieldElement ret(this->mod);
             ret.value = this->value;
             return ret;
@@ -88,19 +91,54 @@ public:
     }
 
     //operator overload for /
-    GFieldElement operator / (const GFieldElement& GF) {
+    GFieldElement operator / (GFieldElement& GF) {
         if(this->mod != GF.mod) {
-            cout << "Not in the same field\n";
-            GFieldElement ret(this->mod);
-            ret.value = this->value;
-            return ret;
+            throw invalid_argument("Not in the same field!" );
+        }
+        else if (~(GF.has_inverse())) {
+            throw runtime_error("Division cannot be done with noninvertible element!");
         }
         else {
             GFieldElement ret(this->mod);
-            ret.value = this->value / GF.value;
+            // Need to do ret.value = this-> value * Gf.inverse()
+            //ret.value = this->value / GF.value;
             return ret;
         }
     }
+
+    GFieldElement inverse() {
+        int r0 = this->mod;
+        int r1 = this->value;
+        int t0 = 0;
+        int t1 = 1;
+        while (r1 != 0) {
+            int q = r0 / r1;
+            int r = r0 % r1;
+            int t = t0 - q * t1;
+            r0 = r1;
+            r1 = r;
+            t0 = t1;
+            t1 = t;
+        }
+        if (t0 < 0) {
+            t0 += this->mod;  // ensure t0 is positive
+        }
+        GFieldElement inv(t0, this->mod);
+        return inv;
+    }
+
+    bool has_inverse() {
+        if (value == 0) {
+            return false;  // 0 does not have an inverse
+        }
+        for (int i = 2; i <= mod; i++) {
+            if (mod % i == 0 && value % i == 0) {
+                return false;  // element is not relatively prime to mod, so it does not have an inverse
+            }
+        }
+        return true;  // element has an inverse
+    }
+
 };
 
 #endif // GFIELDELEMENT_H_INCLUDED

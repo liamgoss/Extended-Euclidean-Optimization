@@ -8,7 +8,9 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
     GField myField(8);
-    myField.printField();
+    
+    GFieldElement divis = myField[6] / myField[4];
+    
 
     return 0;
 }
