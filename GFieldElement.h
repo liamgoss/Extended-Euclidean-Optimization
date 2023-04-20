@@ -75,7 +75,7 @@ public:
     }
 
     //operator overload for *
-    GFieldElement operator * (const GFieldElement& GF) {
+    GFieldElement operator * (const GFieldElement& GF) const {
         if(this->mod != GF.mod) {
             throw invalid_argument("Not in the same field!" );
             GFieldElement ret(this->mod);
@@ -95,38 +95,18 @@ public:
         if(this->mod != GF.mod) {
             throw invalid_argument("Not in the same field!" );
         }
-        else if (~(GF.has_inverse())) {
-            throw runtime_error("Division cannot be done with noninvertible element!");
-        }
-        else {
+        else if ((GF.has_inverse())) {
             GFieldElement ret(this->mod);
             // Need to do ret.value = this-> value * Gf.inverse()
-            //ret.value = this->value / GF.value;
+            const GFieldElement inv = GF.inverse();
+            ret = (*this) * inv;  // Use parentheses to call the operator overload function
             return ret;
+            
+        }
+        else {
+            throw runtime_error("Division cannot be done with noninvertible element!");
         }
     }
-
-    GFieldElement inverse() {
-        int r0 = this->mod;
-        int r1 = this->value;
-        int t0 = 0;
-        int t1 = 1;
-        while (r1 != 0) {
-            int q = r0 / r1;
-            int r = r0 % r1;
-            int t = t0 - q * t1;
-            r0 = r1;
-            r1 = r;
-            t0 = t1;
-            t1 = t;
-        }
-        if (t0 < 0) {
-            t0 += this->mod;  // ensure t0 is positive
-        }
-        GFieldElement inv(t0, this->mod);
-        return inv;
-    }
-
     bool has_inverse() {
         if (value == 0) {
             return false;  // 0 does not have an inverse
@@ -138,6 +118,34 @@ public:
         }
         return true;  // element has an inverse
     }
+
+    GFieldElement inverse() {
+        if (this->has_inverse()) {
+            int r0 = this->mod;
+            int r1 = this->value;
+            int t0 = 0;
+            int t1 = 1;
+            while (r1 != 0) {
+                int q = r0 / r1;
+                int r = r0 % r1;
+                int t = t0 - q * t1;
+                r0 = r1;
+                r1 = r;
+                t0 = t1;
+                t1 = t;
+            }
+            if (t0 < 0) {
+                t0 += this->mod;  // ensure t0 is positive
+            }
+            GFieldElement inv(t0, this->mod);
+            return inv;
+        } else {
+            throw runtime_error("Element does not have an inverse!");
+        }
+        
+    }
+
+    
 
 };
 
