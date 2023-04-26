@@ -1,6 +1,5 @@
 #include <iostream>
-#include "GField.h"
-#include "GFieldElement.h"
+#include "Galois.h"
 
 using namespace std;
 
