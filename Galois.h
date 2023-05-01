@@ -19,17 +19,20 @@ class GFieldElement
 public:
     //default constructor
     GFieldElement() {
+        throw runtime_error("Galois.h should not be used! Instead use GField.h and GFieldElement.h!");
         parentField = nullptr;
     }
 
     //constructor with mod input
     GFieldElement(int m, GField* field) {
+        throw runtime_error("Galois.h should not be used! Instead use GField.h and GFieldElement.h!");
         mod = m;
         parentField = field;
     }
 
     //constructor with data and mod input
     GFieldElement(int data, int m, GField* field) {
+        throw runtime_error("Galois.h should not be used! Instead use GField.h and GFieldElement.h!");
         mod = m;
         value = data % m;
         parentField = field;
@@ -64,6 +67,7 @@ private:
 public:
     const int TESTINT = 6942069;
     GField() {
+        throw runtime_error("Galois.h should not be used! Instead use GField.h and GFieldElement.h!");
         // Default constructor
         // Set default field to be GF(17)
         order = 17;
@@ -73,6 +77,7 @@ public:
         garbageifyInverses();
     }
     GField(int ord) {
+        throw runtime_error("Galois.h should not be used! Instead use GField.h and GFieldElement.h!");
         order = ord;
         elements.reserve(ord);
         createElements();
@@ -81,6 +86,7 @@ public:
     }
 
     GField(int ord, bool enableMemoization) {
+        throw runtime_error("Galois.h should not be used! Instead use GField.h and GFieldElement.h!");
         order = ord;
         elements.reserve(ord);
         createElements();
@@ -157,22 +163,30 @@ public:
         if (b == 0) {
             return {a, 1, 0};
         }
+        // d = a*s + b*t
         tuple<int, int, int> d1_s1_t1 = extendedEuclideanAlgo(b, a % b);
-        int d = std::get<0>(d1_s1_t1);
-        int s = std::get<2>(d1_s1_t1);
+        int d = std::get<0>(d1_s1_t1); // d is the GCD of a and b
+        int s = std::get<2>(d1_s1_t1); 
         int t = std::get<1>(d1_s1_t1) - (a / b) * std::get<2>(d1_s1_t1); // t = s1 - (a intDivision b) * t1
         
         return {d, s, t};
     }
 
     GFieldElement inverse(GFieldElement x) {
-        // Call the algorithm
+        // Call the algorithm with the field modulus
         tuple<int, int, int> ext = extendedEuclideanAlgo(x.getValue(), this->order);
-        // Returned: {inverse value, bezout coefficient s, bezout coeffient t}
-        // Convert inverse value to element
-        return GFieldElement(std::get<0>(ext), this->order, this);
+        // If the GCD is not 1, then x does not have an inverse
+        if (std::get<0>(ext) != 1) {
+            throw std::runtime_error("Element does not have an inverse in the field");
+        }
+        // Compute the inverse using the Bezout coefficients
+        int inverseValue = std::get<1>(ext);
+        if (inverseValue < 0) {
+            inverseValue += this->order;
+        }
+        // Return the inverse as a GFieldElement
+        return GFieldElement(inverseValue, this->order, this);
     }
-    
 
 };
 
@@ -241,7 +255,7 @@ GFieldElement GFieldElement::inverse_iterative() {
 //operator overload for +
 GFieldElement operator + (GFieldElement& GF1, GFieldElement& GF2) {
     if(GF1.getMod() != GF2.getMod()) {
-        throw invalid_argument("Not in the same field!" );
+        throw runtime_error("Not in the same field!" );
         
         GFieldElement ret(GF1.getMod(), GF1.getParentField());
         ret.setValue(GF1.getValue());
@@ -258,7 +272,7 @@ GFieldElement operator + (GFieldElement& GF1, GFieldElement& GF2) {
 //operator overload for -
 GFieldElement operator - (GFieldElement& GF1, GFieldElement& GF2) {
     if(GF1.getMod() != GF2.getMod()) {
-        throw invalid_argument("Not in the same field!" );
+        throw runtime_error("Not in the same field!" );
         
         GFieldElement ret(GF1.getMod(), GF1.getParentField());
         ret.setValue(GF1.getValue());
@@ -277,7 +291,7 @@ GFieldElement operator - (GFieldElement& GF1, GFieldElement& GF2) {
 //operator overload for *
 GFieldElement operator * (GFieldElement& GF1, GFieldElement& GF2) {
     if(GF1.getMod() != GF2.getMod()) {
-        throw invalid_argument("Not in the same field!" );
+        throw runtime_error("Not in the same field!" );
         GFieldElement ret(GF1.getMod(), GF1.getParentField());
         ret.setValue(GF1.getValue());
         return ret;
@@ -293,7 +307,7 @@ GFieldElement operator * (GFieldElement& GF1, GFieldElement& GF2) {
 //operator overload for /
 GFieldElement operator / (GFieldElement& GF1, GFieldElement& GF2) {
     if(GF1.getMod() != GF2.getMod()) {
-        throw invalid_argument("Not in the same field!" );
+        throw runtime_error("Not in the same field!" );
     }
     else if ((GF2.has_inverse())) {
         GFieldElement ret(GF1.getMod(), GF1.getParentField());

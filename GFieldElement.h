@@ -41,7 +41,7 @@ public:
     //operator overload for +
     GFieldElement operator + (const GFieldElement& GF) {
         if(this->mod != GF.mod) {
-            throw invalid_argument("Not in the same field!" );
+            throw runtime_error("Not in the same field!" );
             
             GFieldElement ret(this->mod);
             ret.value = this->value;
@@ -58,7 +58,7 @@ public:
     //operator overload for -
     GFieldElement operator - (const GFieldElement& GF) {
         if(this->mod != GF.mod) {
-            throw invalid_argument("Not in the same field!" );
+            throw runtime_error("Not in the same field!" );
             
             GFieldElement ret(this->mod);
             ret.value = this->value;
@@ -77,7 +77,7 @@ public:
     //operator overload for *
     GFieldElement operator * (const GFieldElement& GF) const {
         if(this->mod != GF.mod) {
-            throw invalid_argument("Not in the same field!" );
+            throw runtime_error("Not in the same field!" );
             GFieldElement ret(this->mod);
             ret.value = this->value;
             return ret;
@@ -93,7 +93,7 @@ public:
     //operator overload for /
     GFieldElement operator / (GFieldElement& GF) {
         if(this->mod != GF.mod) {
-            throw invalid_argument("Not in the same field!" );
+            throw runtime_error("Not in the same field!" );
         }
         else if ((GF.has_inverse())) {
             GFieldElement ret(this->mod);
