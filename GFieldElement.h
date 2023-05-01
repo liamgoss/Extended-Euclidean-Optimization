@@ -3,13 +3,14 @@
 
 #include <iostream>
 #include <stdexcept>
-
+#include "InverseError.h"
 using namespace std;
 
 class GFieldElement
 {
     int value;
     int mod;
+    bool isInverseCalculated = false;
 
 public:
     //default constructor
@@ -31,6 +32,16 @@ public:
     void operator = (int data) {
         value = data % mod;
     }
+
+    GFieldElement& operator=(const GFieldElement& other) {
+        if (this != &other) {
+            value = other.value;
+            mod = other.mod;
+            isInverseCalculated = other.isInverseCalculated;
+        }
+        return *this;
+    }
+
 
     //operator overload for <<
     friend ostream& operator << (ostream& os, const GFieldElement& GF) {
@@ -95,10 +106,14 @@ public:
         if(this->mod != GF.mod) {
             throw runtime_error("Not in the same field!" );
         }
+        else if (GF.getValue() == 0) {
+            throw InverseDNE();
+        }
         else if ((GF.has_inverse())) {
             GFieldElement ret(this->mod);
             // Need to do ret.value = this-> value * Gf.inverse()
             const GFieldElement inv = GF.inverse();
+            setInverseStatus(true);
             ret = (*this) * inv;  // Use parentheses to call the operator overload function
             return ret;
             
@@ -109,6 +124,7 @@ public:
     }
     bool has_inverse() {
         if (value == 0) {
+            throw InverseDNE();
             return false;  // 0 does not have an inverse
         }
         for (int i = 2; i <= mod; i++) {
@@ -121,7 +137,11 @@ public:
 
     // Extended Euclidean Algorithm
     GFieldElement inverse() {
-        if (this->has_inverse()) {
+        if (this->getValue() == 0) {
+            setInverseStatus(true);
+            throw InverseDNE();
+        }
+        if (this->has_inverse() && !this->isInverseCalculated) {
             int r0 = this->mod;
             int r1 = this->value;
             int t0 = 0;
@@ -139,14 +159,34 @@ public:
                 t0 += this->mod;  // ensure t0 is positive
             }
             GFieldElement inv(t0, this->mod);
+            setInverseStatus(true);
             return inv;
         } else {
-            throw runtime_error("Element does not have an inverse!");
+            throw InverseDNE(); // Custom exception class from "InverseError.h"
+
+            // In order to avoid pointers to the parent field class (see Galois.h - it didnt work) 
+            // we can do this to notify the parent field to set the DNEValue in the inverses vector
         }
         
     }
 
+    int getValue() {
+        return value;
+    }
+
+    void setValue(int val) {
+        value = val;
+    }
+    void setMod(int m) {
+        mod = m;
+    }
+
+
+    bool getInverseStatus() { return this->isInverseCalculated; }
+    void setInverseStatus(bool stat) { this->isInverseCalculated = stat; }
     
+
+
 
 };
 
