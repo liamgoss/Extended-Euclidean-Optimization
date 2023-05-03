@@ -42,7 +42,7 @@ public:
     GFieldElement operator + (const GFieldElement& GF) {
         if(this->mod != GF.mod) {
             throw runtime_error("Not in the same field!" );
-            
+
             GFieldElement ret(this->mod);
             ret.value = this->value;
             return ret;
@@ -59,7 +59,7 @@ public:
     GFieldElement operator - (const GFieldElement& GF) {
         if(this->mod != GF.mod) {
             throw runtime_error("Not in the same field!" );
-            
+
             GFieldElement ret(this->mod);
             ret.value = this->value;
             return ret;
@@ -95,18 +95,19 @@ public:
         if(this->mod != GF.mod) {
             throw runtime_error("Not in the same field!" );
         }
-        else if ((GF.has_inverse())) {
+        else { //if ((GF.has_inverse())) {
             GFieldElement ret(this->mod);
             // Need to do ret.value = this-> value * Gf.inverse()
             const GFieldElement inv = GF.inverse();
             ret = (*this) * inv;  // Use parentheses to call the operator overload function
             return ret;
-            
+
         }
-        else {
-            throw runtime_error("Division cannot be done with noninvertible element!");
-        }
+        //else {
+        //    throw runtime_error("Division cannot be done with noninvertible element!");
+        //}
     }
+
     bool has_inverse() {
         if (value == 0) {
             return false;  // 0 does not have an inverse
@@ -117,6 +118,10 @@ public:
             }
         }
         return true;  // element has an inverse
+    }
+
+    int getValue(){
+        return this->value;
     }
 
     // Extended Euclidean Algorithm
@@ -143,10 +148,10 @@ public:
         } else {
             throw runtime_error("Element does not have an inverse!");
         }
-        
+
     }
 
-    
+
 
 };
 
